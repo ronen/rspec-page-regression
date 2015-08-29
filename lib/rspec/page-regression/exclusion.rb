@@ -1,10 +1,10 @@
 module RSpec::PageRegression
   class Exclusion
-    def initialize arr
-      @left = arr[0]
-      @top = arr[1]
-      @right = arr[2]
-      @bottom = arr[3]
+    def initialize hsh
+      @left = hsh[:left]
+      @top = hsh[:top]
+      @right = hsh[:right]
+      @bottom = hsh[:bottom]
     end
 
     def row? y
