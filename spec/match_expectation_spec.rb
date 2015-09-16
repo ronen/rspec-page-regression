@@ -155,6 +155,15 @@ describe "match_expectation" do
       Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected.png" }
     end
 
+    context "with custom screenshot options" do
+      Given do
+        RSpec::PageRegression.configure do |config|
+          config.screenshot_options = { :selector => '#foo' }
+        end
+      end
+      Then { expect(@driver).to have_received(:save_screenshot).with(test_path, { :selector => '#foo' }) }
+    end
+
     context "with page size configuration" do
       Given do
         RSpec::PageRegression.configure do |config|

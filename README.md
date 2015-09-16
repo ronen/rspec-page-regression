@@ -119,7 +119,19 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
        config.page_size = [1280, 1024]
      end
 
-Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.
+Note that this specifies the size of the browser window viewport. By default, rspec-page-regression requests a render of the full page, which might extend beyond the window, so the rendered file dimensions may be larger than this configuration value. You can configure this behaviour (see Screenshot options).
+
+### Screenshot options
+
+You can specify the options for the screenshot call issued to Poltergeist. By default, rspec-page-regression requests a render of the full page: `{ :full => true }`.
+
+For instance, you can specify a CSS selector to render a specific element:
+
+  RSpec::PageRegression.configure do |config|
+    config.screenshot_options = { :selector => '#foo' }
+  end
+
+In PhantomJS 2.0, the `full` screenshot option is not working correctly. You can use the `selector` option to work around this issue by passing a selector for an element that covers the whole page.
 
 ### Image difference threshold
 

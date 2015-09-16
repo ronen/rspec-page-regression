@@ -24,4 +24,12 @@ module RSpec::PageRegression
   def self.threshold
     @@threshold ||= 0.0
   end
+
+  def self.screenshot_options= options
+    @@screenshot_options = options
+  end
+
+  def self.screenshot_options
+    @@screenshot_options ||= { :full => true }
+  end
 end

@@ -7,10 +7,10 @@ module RSpec::PageRegression
       # Capybara doesn't implement resize in API
       unless page.driver.respond_to? :resize
         page.driver.browser.manage.window.resize_to *RSpec::PageRegression.page_size
-      else 
+      else
         page.driver.resize *RSpec::PageRegression.page_size
       end
-      page.driver.save_screenshot test_image_path, :full => true
+      page.driver.save_screenshot test_image_path, RSpec::PageRegression.screenshot_options
     end
   end
 end
