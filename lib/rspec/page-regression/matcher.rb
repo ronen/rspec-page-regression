@@ -5,8 +5,9 @@ module RSpec::PageRegression
   RSpec::Matchers.define :match_expectation do |expectation_path|
 
     match do |page|
-      @filepaths = FilePaths.new(RSpec.current_example, expectation_path)
-      Renderer.render(page, @filepaths.test_image)
+      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, expectation_path)
+      @filepaths = @responsive_filepaths.first
+      Renderer.render_responsive(page, @responsive_filepaths)
       @comparison = ImageComparison.new(@filepaths)
       @comparison.result == :match
     end

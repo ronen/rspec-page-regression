@@ -14,7 +14,7 @@ module RSpec::PageRegression
   end
 
   def self.page_size
-    @@page_size ||= [1024, 768]
+    @@page_size ||= [[1024, 768]]
   end
 
   def self.threshold= (threshold)
