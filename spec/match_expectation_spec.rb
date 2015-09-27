@@ -15,9 +15,9 @@ describe "match_expectation" do
 
   context "helpers" do
     it "use proper paths" do
-      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/expected.png")
-      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/test.png")
-      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/difference.png")
+      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('expected')}.png")
+      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('test')}.png")
+      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('difference')}.png")
     end
   end
 
@@ -160,14 +160,14 @@ describe "match_expectation" do
           example_group: { description: "parent" }
         }
       end
-      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
-      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected.png" }
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/#{file_name('test')}.png"), @opts) }
+      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected" }
     end
 
     context "with page size configuration" do
       Given do
         RSpec::PageRegression.configure do |config|
-          config.page_size = [123, 456]
+          config.page_size = [[123, 456]]
         end
       end
       Then { expect(@driver).to have_received(:resize).with(123, 456) }

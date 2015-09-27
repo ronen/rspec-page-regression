@@ -6,7 +6,6 @@ module RSpec::PageRegression
 
     match do |page|
       @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, expectation_path)
-      @filepaths = @responsive_filepaths.first
       Renderer.render_responsive(page, @responsive_filepaths)
       @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
       @comparisons.each { |comparison| return false unless comparison.result == :match }
