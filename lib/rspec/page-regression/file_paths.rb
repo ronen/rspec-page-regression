@@ -27,9 +27,9 @@ module RSpec::PageRegression
       cwd = Pathname.getwd
 
       @page_size = page_size
-      @expected_image = expected_path || (expected_root + canonical_path + "expected-#{page_size.join('x')}.png").relative_path_from(cwd)
-      @test_image = (test_root + canonical_path + "test-#{page_size.join('x')}.png").relative_path_from cwd
-      @difference_image = (test_root + canonical_path + "difference-#{page_size.join('x')}.png").relative_path_from cwd
+      @expected_image = expected_path || (expected_root + canonical_path + file_name('expected')).relative_path_from(cwd)
+      @test_image = (test_root + canonical_path + file_name('test')).relative_path_from cwd
+      @difference_image = (test_root + canonical_path + file_name('difference')).relative_path_from cwd
     end
 
     def all
@@ -44,6 +44,10 @@ module RSpec::PageRegression
 
 
     private
+
+    def file_name(prefix)
+      "#{prefix}-#{@page_size.join('x')}.png"
+    end
 
     def description_ancestry(metadata)
       return [] if metadata.nil?
