@@ -170,6 +170,13 @@ describe "match_expectation" do
           config.page_size = [[123, 456]]
         end
       end
+
+      after :each do
+        RSpec::PageRegression.configure do |config|
+          config.page_size = [[1024, 768]]
+        end
+      end
+
       Then { expect(@driver).to have_received(:resize).with(123, 456) }
     end
 
@@ -181,6 +188,12 @@ describe "match_expectation" do
 
         use_test_image('A', [1024, 768])
         use_test_image('A', [480, 320])
+      end
+
+      after :each do
+        RSpec::PageRegression.configure do |config|
+          config.page_size = [[1024, 768]]
+        end
       end
 
       context 'should receive 2 resizes' do
