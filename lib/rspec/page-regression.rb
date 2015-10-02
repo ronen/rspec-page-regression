@@ -1,3 +1,4 @@
+require "rspec/page-regression/exclusion"
 require "rspec/page-regression/file_paths"
 require "rspec/page-regression/image_comparison"
 require "rspec/page-regression/matcher"

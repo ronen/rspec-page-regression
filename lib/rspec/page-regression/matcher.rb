@@ -2,12 +2,18 @@ require 'which_works'
 
 module RSpec::PageRegression
 
-  RSpec::Matchers.define :match_expectation do |expectation_path|
+  RSpec::Matchers.define :match_expectation do |args|
 
     match do |page|
+      if args == nil || args.is_a?(String)
+        expectation_path = args
+      else
+        expectation_path = args[:path]
+        ignore = args[:ignore]
+      end
       @filepaths = FilePaths.new(RSpec.current_example, expectation_path)
       Renderer.render(page, @filepaths.test_image)
-      @comparison = ImageComparison.new(@filepaths)
+      @comparison = ImageComparison.new(@filepaths, ignore)
       @comparison.result == :match
     end
 
