@@ -15,9 +15,9 @@ describe "match_expectation" do
 
   context "helpers" do
     it "use proper paths" do
-      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/expected.png")
-      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/test.png")
-      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/difference.png")
+      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('expected')}.png")
+      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('test')}.png")
+      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/#{file_name('difference')}.png")
     end
   end
 
@@ -160,17 +160,75 @@ describe "match_expectation" do
           example_group: { description: "parent" }
         }
       end
-      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
-      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected.png" }
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/#{file_name('test')}.png"), @opts) }
+      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected" }
     end
 
     context "with page size configuration" do
       Given do
         RSpec::PageRegression.configure do |config|
-          config.page_size = [123, 456]
+          config.page_size = [[123, 456]]
         end
       end
+
+      after :each do
+        RSpec::PageRegression.configure do |config|
+          config.page_size = [[1024, 768]]
+        end
+      end
+
       Then { expect(@driver).to have_received(:resize).with(123, 456) }
+    end
+
+    context "with multiple page size configuration" do
+      Given do
+        RSpec::PageRegression.configure do |config|
+          config.page_size = [[1024, 768], [480, 320]]
+        end
+
+        use_test_image('A', [1024, 768])
+        use_test_image('A', [480, 320])
+      end
+
+      after :each do
+        RSpec::PageRegression.configure do |config|
+          config.page_size = [[1024, 768]]
+        end
+      end
+
+      context 'should receive 2 resizes' do
+        Then { expect(@driver).to have_received(:resize).with(1024, 768) }
+        Then { expect(@driver).to have_received(:resize).with(480, 320) }
+      end
+
+      context 'fails when all the expected files are missing' do
+        Then { expect(@error.message).to include "Missing expectation image #{expected_path([1024, 768])}" }
+        Then { expect(@error.message).to include "Missing expectation image #{expected_path([480, 320])}" }
+      end
+
+      context 'fails when one of the expected files are missing' do
+        Given { use_expected_image('A', [1024, 768]) }
+        Then { expect(@error.message).to_not include "Missing expectation image #{expected_path([1024, 768])}" }
+        Then { expect(@error.message).to include "Missing expectation image #{expected_path([480, 320])}" }
+      end
+
+      context 'passes when expectation matches in all page sizes' do
+        Given do
+          use_expected_image('A', [1024, 768])
+          use_expected_image('A', [480, 320])
+        end
+        Then { expect(@error).to be_nil }
+      end
+
+      context 'fails when expectation does not match atleast one of the page sizes' do
+        Given do
+          use_expected_image('A', [1024, 768])
+          use_expected_image('B', [480, 320])
+        end
+        Then { expect(@error.message).to include "Test image does not match expected image" }
+        Then { expect(@error.message).to include "#{expected_path([480, 320])}" }
+        Then { expect(@error.message).to_not include "#{expected_path([1024, 768])}" }
+      end
     end
 
   end
@@ -212,12 +270,12 @@ describe "match_expectation" do
   def create_existing_difference_image
   end
 
-  def use_test_image(name)
-    use_fixture_image(name, test_path)
+  def use_test_image(name, page_size = nil)
+    use_fixture_image(name, test_path(page_size))
   end
 
-  def use_expected_image(name)
-    use_fixture_image(name, expected_path)
+  def use_expected_image(name, page_size = nil)
+    use_fixture_image(name, expected_path(page_size))
   end
 
   def preexisting_difference_image

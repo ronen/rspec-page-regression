@@ -1,15 +1,15 @@
 module Helpers
 
-  def test_path
-    getpath(TestDir, "test")
+  def test_path(page_size = nil)
+    getpath(TestDir, file_name('test', page_size))
   end
 
-  def expected_path
-    getpath(SpecDir, "expected")
+  def expected_path(page_size = nil)
+    getpath(SpecDir, file_name('expected', page_size))
   end
 
-  def difference_path
-    getpath(TestDir, "difference")
+  def difference_path(page_size = nil)
+    getpath(TestDir, file_name('difference', page_size))
   end
 
   def getpath(root, base)
@@ -23,6 +23,11 @@ module Helpers
   def group_path(metadata)
     return Pathname.new("") if metadata.nil?
     group_path(metadata[:parent_example_group]) + metadata[:description].parameterize("_")
+  end
+
+  def file_name(prefix, page_size = nil)
+    page_size ||= RSpec::PageRegression.page_size.first
+    "#{prefix}-#{page_size.join('x')}"
   end
 
 end
