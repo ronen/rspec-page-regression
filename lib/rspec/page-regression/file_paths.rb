@@ -10,7 +10,7 @@ module RSpec::PageRegression
       expected_path = Pathname.new(expected_path) if expected_path
 
       descriptions = description_ancestry(example.metadata[:example_group])
-      descriptions.push example.description unless example.description.parameterize('_') =~ %r{
+      descriptions.push example.description unless example.description.parameterize(separator: '_') =~ %r{
         ^
         (then_+)?
         ( (expect_+) (page_+) (to_+) (not_+)? | (page_+) (should_+)? )
@@ -18,7 +18,7 @@ module RSpec::PageRegression
         (_#{Regexp.escape(expected_path.to_s)})?
           $
       }xi
-      canonical_path = descriptions.map{|s| s.parameterize('_')}.inject(Pathname.new(""), &:+)
+      canonical_path = descriptions.map{|s| s.parameterize(separator: '_')}.inject(Pathname.new(""), &:+)
 
       app_root = Pathname.new(example.metadata[:file_path]).realpath.each_filename.take_while{|c| c != "spec"}.inject(Pathname.new("/"), &:+)
       expected_root = app_root + "spec" + "expectation"
@@ -39,7 +39,7 @@ module RSpec::PageRegression
 
     def description_ancestry(metadata)
       return [] if metadata.nil?
-      description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
+      description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize(separator: "_")
     end
   end
 end

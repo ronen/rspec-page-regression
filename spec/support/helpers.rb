@@ -17,12 +17,12 @@ module Helpers
   end
 
   def example_path(example)
-    group_path(example.metadata[:example_group]) + example.description.parameterize("_")
+    group_path(example.metadata[:example_group]) + example.description.parameterize(separator: "_")
   end
 
   def group_path(metadata)
     return Pathname.new("") if metadata.nil?
-    group_path(metadata[:parent_example_group]) + metadata[:description].parameterize("_")
+    group_path(metadata[:parent_example_group]) + metadata[:description].parameterize(separator: "_")
   end
 
 end
