@@ -124,6 +124,8 @@ You can use `selector` option to specify area to match:
 
 File name in this case will be "test-selector-foo.png"
 
+**Note** [selenium-webdriver](https://github.com/SeleniumHQ/selenium/blob/ceaf3da79542024becdda5953059dfbb96fb3a90/rb/lib/selenium/webdriver/common/driver_extensions/takes_screenshot.rb#L34) doesn't support `selector` options to save part of screenshot
+
 ### Several screenshots within a single example
 
 RspecPageRegression names the screenshots (both reference and test) using the example/scenario name.  So if you try: 
