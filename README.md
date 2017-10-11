@@ -151,6 +151,14 @@ then the two tests will collide since they both use filename "two_conditions.png
 
 And the tests will use filenames "two_conditions-one.png" and "two_conditions-two.png" respectively, and won't collide.
 
+### Other options
+
+This gem uses [Imatcher](https://github.com/teachbase/imatcher) and you can use its options in `match_reference_screenshot`, for example:
+
+```ruby
+    expect(page).to match_reference_screenshot(threshold: 0.8, mode: :grayscale)
+```
+
 ### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:

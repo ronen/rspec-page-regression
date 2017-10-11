@@ -1,4 +1,7 @@
+require 'rspec/page-regression/refinements/string'
+
 module Helpers
+  using RSpec::PageRegression::Refinements::String
 
   def initialize_spec
     @opts = { full: true }

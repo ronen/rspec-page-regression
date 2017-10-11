@@ -1,7 +1,9 @@
-require 'active_support/core_ext/string/inflections'
+require 'rspec/page-regression/refinements/string'
 
 module RSpec::PageRegression
   class FilePaths
+    using RSpec::PageRegression::Refinements::String
+
     attr_reader :reference_screenshot
     attr_reader :test_screenshot
     attr_reader :difference_image
